@@ -24,7 +24,7 @@ namespace API.Controllers
 		}
 
         [HttpPost("register")]
-        public async Task<ActionResult<AppUser>> Register(RegisterDTO registerDTO) {
+        public async Task<ActionResult<UserDTO>> Register(RegisterDTO registerDTO) {
             using var hmac = new HMACSHA512();
 
 			if (await UserExist(registerDTO.Username))
@@ -39,11 +39,14 @@ namespace API.Controllers
 
 			await _context.SaveChangesAsync();
 
-			return user;
+			return new UserDTO{
+				Username = user.Username,
+				Token = _tokenService.CreateToken(user),
+			};
         }
 
 		[HttpPost("login")]
-		public async Task<ActionResult<AppUser>> Login(LoginDTO loginDTO) {
+		public async Task<ActionResult<UserDTO>> Login(LoginDTO loginDTO) {
 			var user = await _context.Users.SingleOrDefaultAsync( user => user.Username == loginDTO.Username);
 
 			if (user == null)
@@ -58,7 +61,10 @@ namespace API.Controllers
 					return Unauthorized("Invalid password");
 			}
 
-			return user;
+			return new UserDTO{
+				Username = user.Username,
+				Token = _tokenService.CreateToken(user),
+			};
 		}
 
 		private async Task<bool> UserExist(string username) {
