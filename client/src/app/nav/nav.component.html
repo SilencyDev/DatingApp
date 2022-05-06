@@ -20,6 +20,9 @@
 					  <a class="nav-link" (click)="logout()">logout</a>
 				</li>
 			  </ng-container>
+			  <li class="nav-item">
+				<a class="nav-link" routerLink="/errors" routerLinkActive="active">Errors</a>
+			  </li>
 		  </ul>
 		  <div *ngIf="(accountService.currentUser$ | async) as user" class="dropdown" dropdown>
 			  <a class="dropdown-toggle text-light" dropdownToggle>Welcome {{ user.username }}</a>

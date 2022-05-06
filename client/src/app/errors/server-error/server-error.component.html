@@ -1,0 +1,19 @@
+<div class="middleHeight py-5">
+    <div class="d-flex flex-column text-center p-2">
+      <div class="card text-white bg-secondary mb-3">
+        <div class="card-header">
+          Internal server error
+        </div>
+          <ng-container *ngIf="error">
+            <div class="card-body">
+              <div class="card-title">
+                <h5>Error: {{ error.message }}</h5>
+              </div>
+              <div class="card-text">
+                {{ error.details }}
+              </div>
+            </div>
+        </ng-container>
+        </div>
+    </div>
+</div>
