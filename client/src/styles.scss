@@ -2,7 +2,9 @@
 
 /* Importing Bootstrap SCSS file. */
 // @import "~bootstrap/scss/bootstrap";
-
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins';
 /* Importing Datepicker SCSS file. */
 // @import "node_modules/ngx-bootstrap/datepicker/bs-datepicker";
 .middleHeight {
