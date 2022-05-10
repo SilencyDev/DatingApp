@@ -1,8 +1,8 @@
 <div class="card mb-4">
   <div class="card-img-wrapper">
-    <img src="{{ member.photoUrl }}" alt="{{ member.pseudo }}" class="card-img-top">
+    <img src="{{ member.photoUrl || './assets/user.png'}}" alt="{{ member.pseudo }}" class="card-img-top">
     <div class="d-flex justify-content-around member-icons animate text-center">
-        <button class="btn btn-primary m-1">
+        <button class="btn btn-primary m-1" routerLink="/members/{{member.username}}">
           <i class="fa fa-user"></i>
         </button>
         <button class="btn btn-primary m-1">
