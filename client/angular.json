@@ -28,6 +28,7 @@
               "src/assets"
             ],
             "styles": [
+              "./node_modules/ngx-spinner/animations/ball-atom.css",
               "./node_modules/bootstrap/scss/bootstrap.scss",
               "./node_modules/bootswatch/dist/quartz/bootstrap.css",
               "./node_modules/ngx-bootstrap/datepicker/bs-datepicker.scss",

@@ -1,5 +1,5 @@
 <div class="row d-flex justify-content-around">
-  <div *ngFor="let member of members" class="cardlist">
+  <div *ngFor="let member of members$ | async" class="cardlist">
       <app-member-card [member]="member"></app-member-card>
   </div>
 </div>
