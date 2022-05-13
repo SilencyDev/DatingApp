@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-md navbar-dark fixed-top">
+<nav class="navbar navbar-expand-md navbar-dark fixed-top glassy">
 	<div class="container">
 		<a class="navbar-brand" routerLink="/" routerLinkActive="active">Dating App</a>
 		<!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,8 +25,9 @@
 			  </li>
 		  </ul>
 		  <div *ngIf="(accountService.currentUser$ | async) as user" class="dropdown" dropdown>
-			  <a class="dropdown-toggle text-light" dropdownToggle>Welcome {{ user.username }}</a>
-			  <div class="dropdown-menu" *dropdownMenu>
+        <img src="{{ user.photoUrl }}" alt="{{ user.photoUrl }}">
+			  <a class="dropdown-toggle text-light ml-2" dropdownToggle>Welcome {{ user.username }}</a>
+			  <div class="dropdown-menu mt-2" *dropdownMenu>
 				  <a class="dropdown-item" routerLink="/member/edit">Edit Profile</a>
 				  <div class="dropdown-divider"></div>
 				  <a class="dropdown-item" (click)="logout()">logout</a>
