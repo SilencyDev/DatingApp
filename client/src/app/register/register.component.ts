@@ -1,4 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AccountService } from '../_services/account.service';
 
@@ -10,20 +12,56 @@ import { AccountService } from '../_services/account.service';
 export class RegisterComponent implements OnInit {
   @Output() emitCancel = new EventEmitter;
   model: any = {}
+  registerForm: FormGroup;
+  maxDate: Date;
+  validationErrors: string[] = [];
 
-  constructor(private readonly accountService: AccountService, private toastr: ToastrService) { }
+  constructor(
+    private readonly accountService: AccountService,
+    private toastr: ToastrService,
+    private formBuilder: FormBuilder,
+    private router: Router) { }
 
   ngOnInit(): void {
+    this.initializeForm();
+    this.maxDate = new Date();
+    this.maxDate.setFullYear(this.maxDate.getFullYear() - 18);
+  }
+
+  initializeForm() {
+    this.registerForm = this.formBuilder.group({
+      username: ['', Validators.required],
+      pseudo: ['', Validators.required],
+      gender: ['male'],
+      dateOfBirth: ['', Validators.required],
+      city: ['', Validators.required],
+      country: ['', Validators.required],
+      password: ['', [
+        Validators.required,
+        Validators.minLength(8),
+        Validators.maxLength(32)]],
+      confirmPassword: ['', [Validators.required, this.matchValues('password')]],
+    });
+    this.registerForm.controls.password.valueChanges.subscribe({
+      next: () => this.registerForm.controls.confirmPassword.updateValueAndValidity()
+    })
+  }
+
+  matchValues(matchTo: string): ValidatorFn {
+    return (control: AbstractControl) => {
+      return control?.value === control?.parent?.controls[matchTo].value
+        ? null :  {isMatching: true};
+    }
   }
 
   register() {
-    this.accountService.register(this.model).subscribe({
+    this.accountService.register(this.registerForm.value).subscribe({
       next: response => {
-        console.log(response);
-        this.cancel()},
+        this.router.navigateByUrl('/members')},
     error: error => {
-      console.log(error);
-      this.toastr.error(error.error);}})
+      this.validationErrors = error;
+      // this.toastr.error(error.error);
+    }})
   }
 
   cancel() {

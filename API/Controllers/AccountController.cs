@@ -10,6 +10,7 @@ using System.Text;
 using API.DTOs;
 using API.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 namespace API.Controllers
 {
@@ -17,23 +18,26 @@ namespace API.Controllers
 	{
         private readonly DataContext _context;
 		private readonly ITokenService _tokenService;
-		public AccountController(DataContext context, ITokenService tokenService)
+		private readonly IMapper _mapper;
+
+		public AccountController(DataContext context, ITokenService tokenService, IMapper mapper)
 		{
 			_tokenService = tokenService;
-            _context = context;
+			_mapper = mapper;
+			_context = context;
 		}
 
         [HttpPost("register")]
         public async Task<ActionResult<UserDTO>> Register(RegisterDTO registerDTO) {
+			var user = _mapper.Map<AppUser>(registerDTO);
+			
             using var hmac = new HMACSHA512();
 
 			if (await UserExist(registerDTO.Username))
 				return BadRequest("Username is taken");
-			var user = new AppUser {
-				Username = registerDTO.Username.ToLower(),
-				PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDTO.Password)),
-				PasswordSalt = hmac.Key
-			};
+			user.Username = registerDTO.Username.ToLower();
+			user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDTO.Password));
+			user.PasswordSalt = hmac.Key;
 
 			_context.Users.Add(user);
 
@@ -42,6 +46,7 @@ namespace API.Controllers
 			return new UserDTO{
 				Username = user.Username,
 				Token = _tokenService.CreateToken(user),
+				Pseudo = user.Pseudo
 			};
         }
 
@@ -66,6 +71,7 @@ namespace API.Controllers
 			return new UserDTO{
 				Username = user.Username,
 				Token = _tokenService.CreateToken(user),
+				Pseudo = user.Pseudo,
 				PhotoUrl = user.Photos.FirstOrDefault(photo => photo.IsMain == true)?.Url
 			};
 		}
