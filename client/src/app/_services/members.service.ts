@@ -1,8 +1,12 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable, of } from 'rxjs';
+import { map, Observable, of, take } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Member } from '../_models/member';
+import { PaginatedResult } from '../_models/pagination';
+import { User } from '../_models/user';
+import { UserParams } from '../_models/userParams';
+import { AccountService } from './account.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,17 +14,38 @@ import { Member } from '../_models/member';
 export class MembersService {
   members: Member[] = [];
   apiUrl = environment.apiUrl;
+  userParams: UserParams;
+  user: User;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private accountService: AccountService) {
+    this.accountService.currentUser$.pipe(take(1)).subscribe(user => {
+      this.user = user;
+      this.userParams = new UserParams(user);
+    })
+  }
 
-  getMembers() {
-    if (this.members.length > 0) return of(this.members)
-    return this.http.get<Member[]>(this.apiUrl + 'users').pipe(
-      map(Members => {
-        this.members = Members;
-        return Members;
-      })
-    )
+  getMembers(userParams: UserParams) {
+    let httpParams = new HttpParams();
+    httpParams = httpParams.append('pageNumber', userParams.pageNumber.toString())
+                 .append('pageSize', userParams.pageSize.toString())
+                 .append('gender', userParams.gender)
+                 .append('orderBy', userParams.orderBy)
+                 .append('maxAge', userParams.maxAge.toString())
+                 .append('minAge', userParams.minAge.toString());
+
+    return this.getPaginatedResult<Member[]>(this.apiUrl + 'users', httpParams);
+  }
+
+  getUserParams() {
+    return this.userParams;
+  }
+
+  setUserParams(params: UserParams) {
+    this.userParams = params;
+  }
+
+  resetUserParams() {
+    this.userParams = new UserParams(this.user);
   }
 
   getMember(username: string) {
@@ -45,5 +70,19 @@ export class MembersService {
 
   setMainPhoto(photoId: number) {
     return this.http.put(this.apiUrl + 'users/set-main-photo/' + photoId, {});
+  }
+
+  private getPaginatedResult<T>(url: string, httpParams: HttpParams) {
+    let paginatedResult: PaginatedResult<T> = new PaginatedResult<T>();
+
+    return this.http.get<T>(url, {observe: 'response', params: httpParams}).pipe(
+      map(response => {
+        paginatedResult.result = response.body;
+        if (response.headers.get('Pagination') != null) {
+          paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
+        }
+        return paginatedResult;
+      })
+    )
   }
 }
