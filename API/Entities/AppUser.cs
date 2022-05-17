@@ -22,7 +22,10 @@ namespace API.Entities
         public DateTime DateOfBirth { get; set; }
         public DateTime Created { get; set; }
         public DateTime LastActive { get; set; }
-        public ICollection<Photo> Photos  { get; set; }
+        public ICollection<Photo> Photos { get; set; }
+        public ICollection<UserLike> LikedByUsers { get; set; }
+        public ICollection<UserLike> LikedUser { get;set; }
+
 
         // public int GetAge() {
         //     return DateOfBirth.CalculateAge();
