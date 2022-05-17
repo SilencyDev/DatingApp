@@ -48,6 +48,14 @@ export class MembersService {
     this.userParams = new UserParams(this.user);
   }
 
+  like(username: string) {
+    return this.http.post(this.apiUrl + 'likes/' + username, {});
+  }
+
+  getLikes(predicate: string) {
+    return this.http.get(this.apiUrl + 'likes?predicate=' + predicate);
+  }
+
   getMember(username: string) {
     let find = this.members.find(user => user.username === username);
     if (find != undefined) return of(find);
