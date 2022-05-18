@@ -80,3 +80,37 @@
   border-top: 1px solid #eee;
   padding: 15px 0;
 }
+
+select.form-control {
+  padding: 0;
+  text-align: center;
+  width: 130px;
+}
+
+.cardlist {
+  max-width: 200px !important;
+  width: 25%;
+  display: block;
+}
+
+
+@media screen and (max-width: 900px) {
+  .cardlist {
+    width: 33%;
+    display: block;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .cardlist {
+    width: 50%;
+    display: block;
+  }
+}
+
+@media screen and (max-width: 300px) {
+  .cardlist {
+    width: 100%;
+    display: block;
+  }
+}

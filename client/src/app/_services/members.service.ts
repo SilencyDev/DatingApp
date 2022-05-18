@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable, of, take } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { LikeParams } from '../_models/likeParams';
 import { Member } from '../_models/member';
 import { PaginatedResult } from '../_models/pagination';
 import { User } from '../_models/user';
@@ -25,13 +26,11 @@ export class MembersService {
   }
 
   getMembers(userParams: UserParams) {
-    let httpParams = new HttpParams();
-    httpParams = httpParams.append('pageNumber', userParams.pageNumber.toString())
-                 .append('pageSize', userParams.pageSize.toString())
-                 .append('gender', userParams.gender)
-                 .append('orderBy', userParams.orderBy)
-                 .append('maxAge', userParams.maxAge.toString())
-                 .append('minAge', userParams.minAge.toString());
+    let httpParams = this.getPaginatedHeaders(userParams.pageNumber, userParams.pageSize);
+    httpParams = httpParams.append('gender', userParams.gender)
+              .append('orderBy', userParams.orderBy)
+              .append('maxAge', userParams.maxAge.toString())
+              .append('minAge', userParams.minAge.toString());
 
     return this.getPaginatedResult<Member[]>(this.apiUrl + 'users', httpParams);
   }
@@ -52,8 +51,10 @@ export class MembersService {
     return this.http.post(this.apiUrl + 'likes/' + username, {});
   }
 
-  getLikes(predicate: string) {
-    return this.http.get(this.apiUrl + 'likes?predicate=' + predicate);
+  getLikes(likeParams: LikeParams) {
+    let httpParams = this.getPaginatedHeaders(likeParams.pageNumber, likeParams.pageSize);
+    httpParams = httpParams.append('predicate', likeParams.predicate);
+    return this.getPaginatedResult<Partial<Member[]>>(this.apiUrl + 'likes?predicate=' + likeParams.predicate, httpParams);
   }
 
   getMember(username: string) {
@@ -78,6 +79,12 @@ export class MembersService {
 
   setMainPhoto(photoId: number) {
     return this.http.put(this.apiUrl + 'users/set-main-photo/' + photoId, {});
+  }
+
+  private getPaginatedHeaders(pageNumber: number, pageSize: number) {
+    let httpParams = new HttpParams();
+    return httpParams.append('pageNumber', pageNumber.toString())
+                 .append('pageSize', pageSize.toString())
   }
 
   private getPaginatedResult<T>(url: string, httpParams: HttpParams) {

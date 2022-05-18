@@ -16,9 +16,9 @@
            <p>{{ member.created | date}}</p>
          </div>
        </div>
-       <div class="card-footer">
+       <div class="card-footer"  *ngIf="member.username != memberService.user.username">
          <div class="btn-group d-flex">
-           <button class="btn btn-primary">Like</button>
+           <button class="btn btn-primary" (click)="like(member)">Like</button>
            <button class="btn btn-success">Message</button>
          </div>
        </div>

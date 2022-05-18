@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using API.DTOs;
 using API.Entities;
 using API.Extensions;
+using API.Helpers;
 using API.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -51,10 +52,13 @@ namespace API.Controllers
         }
 		
 		[HttpGet]
-		public async Task<ActionResult<IEnumerable<LikeDTO>>> GetUserLikes([FromQuery] string predicate) {
-			if (predicate != "liked" && predicate != "likedby")
+		public async Task<ActionResult<PagedList<LikeDTO>>> GetUserLikes([FromQuery] LikesParams likesParams) {
+			likesParams.UserId = User.GetUserId();
+			if (likesParams.Predicate != "liked" && likesParams.Predicate != "likedby")
 				return BadRequest("Wrong or empty predicate given");
-			return Ok(await _likesRepository.GetUserLikes(predicate, User.GetUserId()));
+			var users = await _likesRepository.GetUserLikes(likesParams);
+			Response.AddPaginationHeader(likesParams.PageNumber, likesParams.PageSize, users.TotalCount, users.TotalPages);
+			return Ok(users);
 		}
 	}
 }
