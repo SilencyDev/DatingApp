@@ -57,7 +57,7 @@ namespace API.Controllers
 			if (likesParams.Predicate != "liked" && likesParams.Predicate != "likedby")
 				return BadRequest("Wrong or empty predicate given");
 			var users = await _likesRepository.GetUserLikes(likesParams);
-			Response.AddPaginationHeader(likesParams.PageNumber, likesParams.PageSize, users.TotalCount, users.TotalPages);
+			Response.AddPaginationHeader(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages);
 			return Ok(users);
 		}
 	}

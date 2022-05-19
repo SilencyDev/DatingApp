@@ -8,8 +8,11 @@
         <button class="btn btn-primary m-1" (click)="like(member)">
           <i class="fa fa-heart"></i>
         </button>
-        <button class="btn btn-primary m-1">
-          <i class="fa fa-envelope"></i>
+        <button
+          class="btn btn-primary m-1"
+          routerLink="/members/{{ member.username }}"
+          [queryParams]="{tab:3}">
+            <i class="fa fa-envelope"></i>
         </button>
     </div>
   </div>

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using API.DTOs;
 using API.Entities;
 using API.Extensions;
+using API.Helpers;
 using API.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -51,9 +52,38 @@ namespace API.Controllers
 			return BadRequest("Failed to add the message");
 		}
 		
-		// [HttpGet]
-		// public async Task<Message> GetMessageAsync() {
-		// 	return await _messageRepository.GetMessage();
-		// }
+		[HttpGet]
+		public async Task<ActionResult<IEnumerable<MessageDTO>>> GetMessagesAsync([FromQuery] MessageParams messageParams) {
+			messageParams.Username = User.GetUsername();
+			
+			var messages = await _messageRepository.GetUserMessages(messageParams);
+			Response.AddPaginationHeader(messages.CurrentPage, messages.PageSize, messages.Count, messages.TotalPages);
+			
+			return messages;
+		}
+		
+		[HttpGet("thread/{username}")]
+		public async Task<ActionResult<IEnumerable<MessageDTO>>> GetMessageThread(string username) {
+		
+			return Ok(await _messageRepository.GetMessageThread(User.GetUsername(), username));
+		}
+		
+		[HttpDelete("{id}")]
+		public async Task<ActionResult> DeleteMessage(int id) {
+			var username = User.GetUsername();
+			var message = await _messageRepository.GetMessage(id);
+			if (message.RecipientUsername != username && message.SenderUsername != username)
+				return Unauthorized();
+			if (message.Recipient.Username == username)
+				message.RecipientDeleted = true;
+			else if (message.Sender.Username == username)
+				message.SenderDeleted = true;
+			if (message.RecipientDeleted && message.SenderDeleted)
+				_messageRepository.DeleteMessage(message);
+			if (await _messageRepository.SaveAllAsync())
+				return Ok();
+			
+			return BadRequest("Failed to delete");
+		}
 	}
 }

@@ -26,6 +26,8 @@ export class ListsComponent implements OnInit {
   }
 
   onPageChange(event: any) {
+    if (this.likeParams.pageNumber == event.page)
+      return;
     this.likeParams.pageNumber = event.page;
     this.loadMembers();
   }
