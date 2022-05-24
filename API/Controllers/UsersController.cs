@@ -76,7 +76,7 @@ namespace API.Controllers
 			user.Photos.Add(photo);
 			
 			if (await _userRepository.SaveAllAsync()) {
-				return CreatedAtRoute("GetUser", new {username = user.Username}, _mapper.Map<PhotoDTO>(photo));
+				return CreatedAtRoute("GetUser", new {username = user.UserName}, _mapper.Map<PhotoDTO>(photo));
 			}
 			return BadRequest("Uploading the photo failed");
 		}

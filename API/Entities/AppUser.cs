@@ -3,15 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using API.Extensions;
+using Microsoft.AspNetCore.Identity;
 
 namespace API.Entities
 {
-    public class AppUser
+    public class AppUser : IdentityUser<int>
     {
-        public int Id { get; set; }
-        public string Username { get; set; }
         public string Pseudo { get; set; }
-        public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
         public string Gender { get; set; }
         public string Introduction { get; set; }
@@ -27,10 +25,7 @@ namespace API.Entities
         public ICollection<UserLike> LikedUser { get;set; }
         public ICollection<Message> MessagesSent { get;set; }
         public ICollection<Message> MessagesReceived { get;set; }
-		
-		
-		
-
+        public ICollection<AppUserRole> UserRoles { get; set; }
 
         // public int GetAge() {
         //     return DateOfBirth.CalculateAge();

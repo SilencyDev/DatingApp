@@ -27,20 +27,20 @@ namespace API.Data
 
 		public async Task<PagedList<LikeDTO>> GetUserLikes([FromQuery] LikesParams likesParams)
 		{
-			var users = _context.Users.OrderBy(user => user.Username).AsQueryable();
+			var users = _context.Users.OrderBy(user => user.UserName).AsQueryable();
 			var likes = _context.Likes.AsQueryable();
 
 			if (likesParams.Predicate == "liked") {
 				likes = likes.Where(like => like.SourceUserId == likesParams.UserId);
 				users = likes.Select(like => like.LikedUser);
 			}
-			else if (likesParams.Predicate == "likedBy") {
+			else if (likesParams.Predicate == "likedby") {
 				likes = likes.Where(like => like.LikedUserId == likesParams.UserId);
 				users = likes.Select(like => like.SourceUser);
 			}
 
 			var list =  users.Select(user => new LikeDTO {
-				Username = user.Username,
+				Username = user.UserName,
 				Pseudo = user.Pseudo,
 				Age = user.DateOfBirth.CalculateAge(),
 				PhotoUrl = user.Photos.FirstOrDefault(p => p.IsMain).Url,

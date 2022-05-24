@@ -49,18 +49,18 @@ namespace API.Data
 				.Include(u => u.Sender).ThenInclude(p => p.Photos)
 				.Include(u => u.Recipient).ThenInclude(p => p.Photos)
 				.Where(m =>
-					m.Recipient.Username == currentUsername &&
-					m.Sender.Username == recipientUsername &&
+					m.Recipient.UserName == currentUsername &&
+					m.Sender.UserName == recipientUsername &&
 					m.RecipientDeleted == false ||
-					m.Recipient.Username == recipientUsername &&
-					m.Sender.Username == currentUsername &&
+					m.Recipient.UserName == recipientUsername &&
+					m.Sender.UserName == currentUsername &&
 					m.SenderDeleted == false)
 				.OrderBy(m => m.MessageSent)
 				.ToListAsync();
 				
 			var unseenMessage = messages
 				.Where(m => m.DateRead == null
-					&& m.Recipient.Username == currentUsername)
+					&& m.Recipient.UserName == currentUsername)
 				.ToList();
 			if (unseenMessage.Any()) {
 				foreach(var message in unseenMessage) {
@@ -80,13 +80,13 @@ namespace API.Data
 			
 			query = messageParams.Container switch {
 				"Inbox"	=> query.Where(m =>
-					m.Recipient.Username == messageParams.Username &&
+					m.Recipient.UserName == messageParams.Username &&
 					m.RecipientDeleted == false),
 				"Outbox" => query.Where(m =>
-					m.Sender.Username == messageParams.Username &&
+					m.Sender.UserName == messageParams.Username &&
 					m.SenderDeleted == false),
 				_ => query.Where(m =>
-					m.Recipient.Username == messageParams.Username &&
+					m.Recipient.UserName == messageParams.Username &&
 					m.DateRead == null &&
 					m.RecipientDeleted == false),
 			};

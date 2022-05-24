@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, JsonpClientBackend } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, ReplaySubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -36,7 +36,14 @@ export class AccountService {
     )
   }
 
+  DecodeToken(token: string) {
+    return JSON.parse(atob(token.split('.')[1]));
+  }
+
   setCurrentUser(user: User) {
+    user.roles = [];
+    const roles = this.DecodeToken(user.token).role;
+    Array.isArray(roles) ? user.roles = roles : user.roles.push(roles);
     localStorage.setItem('user',JSON.stringify(user));
     this.currentUserSource.next(user);
   }
