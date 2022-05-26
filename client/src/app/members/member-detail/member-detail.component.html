@@ -6,6 +6,12 @@
           class="card-img-top img-thumbnail">
        <div class="card-body">
          <div>
+           <strong>
+             Status:
+             <i class="fa fa-user ml-2" [class.is-online]="(presence.onlineUsers$ | async).includes(member.username)"></i>
+             {{ (presence.onlineUsers$ | async).includes(member.username) ? "Online" : "Offline"}}
+           </strong>
+           <br>
            <strong>Location:</strong>
            <p>{{ member.city }}, {{ member.country }}</p>
            <strong>Age:</strong>

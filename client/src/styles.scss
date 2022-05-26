@@ -93,6 +93,10 @@ select.form-control {
   display: block;
 }
 
+.is-online {
+  color: greenyellow !important;
+}
+
 
 @media screen and (max-width: 900px) {
   .cardlist {

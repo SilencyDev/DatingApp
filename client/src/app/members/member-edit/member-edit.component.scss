@@ -1,7 +1,10 @@
 .img-thumbnail {
-  margin-top: 5% !important;
+  // margin-top: 5% !important;
+  border: none !important;
+  padding: 0 !important;
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
   max-width: 375px;
-  margin: auto;
 }
 
 // .card {
