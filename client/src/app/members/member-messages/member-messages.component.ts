@@ -14,7 +14,7 @@ export class MemberMessagesComponent implements OnInit {
   @Input() username: string;
   content: string;
 
-  constructor(private messageService: MessageService) { }
+  constructor(public messageService: MessageService) { }
 
   ngOnInit(): void {
   }
@@ -22,10 +22,7 @@ export class MemberMessagesComponent implements OnInit {
   sendMessage() {
     if (this.content == '')
       return;
-    this.messageService.sendMessage(this.username, this.content).subscribe({
-      next: response => {
-        this.messages.push(response);
-        this.messageForm.reset();}
-    });
+    this.messageService.sendMessage(this.username, this.content).then(
+      () => this.messageForm.reset());
   }
 }
