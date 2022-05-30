@@ -2,6 +2,7 @@ import { registerLocaleData } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Message } from '../_models/message';
 import { Pagination } from '../_models/pagination';
+import { ConfirmService } from '../_services/confirm.service';
 import { MessageService } from '../_services/message.service';
 
 @Component({
@@ -17,7 +18,7 @@ export class MessagesComponent implements OnInit {
   pageSize = 5;
   loading = false;
 
-  constructor(private messageService: MessageService) { }
+  constructor(private messageService: MessageService, private confirmService: ConfirmService) { }
 
   ngOnInit(): void {
     this.loadMessages();
@@ -35,10 +36,16 @@ export class MessagesComponent implements OnInit {
   }
 
   deleteMessage(message: Message) {
-    this.messageService.deleteMessage(message.id).subscribe({
-      next: response => {
-        let index = this.messages.findIndex(m => m.id == message.id);
-      this.messages.splice(index, 1);}
+    this.confirmService.confirm('Do you really want to delete the message ?', 'This cannot be undone').subscribe({
+      next: result => {
+        if (result) {
+          this.messageService.deleteMessage(message.id).subscribe({
+            next: response => {
+              let index = this.messages.findIndex(m => m.id == message.id);
+            this.messages.splice(index, 1);}
+          });
+        }
+      }
     })
   }
 

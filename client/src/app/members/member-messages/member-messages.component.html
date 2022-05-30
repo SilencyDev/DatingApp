@@ -3,32 +3,37 @@
     <div *ngIf="!(messageService.messageThread$ | async)?.length">
       No message yet !
     </div>
-    <div *ngFor="let message of (messageService.messageThread$ | async); let indexOfelement = index">
-      <span class="chat-img float-right">
-        <img
-          class="img-circle rounded-circle"
-          src="{{ message.senderPhotoUrl || './assets/user.png' }}"
-          alt="{{ message.senderUsername }}">
-      </span>
-      <div class="chat-body">
-        <div class="header">
-          <small class="text-muted">
-            <span class="fa fa-clock-o"> {{ message.messageSent | timeago }}</span>
-            <span
-              class="text-danger"
-              *ngIf="!message.dateRead && message.senderUsername !== username">
-                (unread)
+    <div #scrollMe
+    style="overflow-y: auto; max-height: 500px"
+    [scrollTop]="scrollMe.scrollHeight">
+      <div
+        *ngFor="let message of (messageService.messageThread$ | async); let indexOfelement = index">
+        <span class="chat-img float-right">
+          <img
+            class="img-circle rounded-circle"
+            src="{{ message.senderPhotoUrl || './assets/user.png' }}"
+            alt="{{ message.senderUsername }}">
+        </span>
+        <div class="chat-body">
+          <div class="header">
+            <small class="text-muted">
+              <span class="fa fa-clock-o"> {{ message.messageSent | timeago }}</span>
+              <span
+                class="text-danger"
+                *ngIf="!message.dateRead && message.senderUsername !== username">
+                  (unread)
+                </span>
+              <span
+                class="text-success"
+                *ngIf="message.dateRead && message.senderUsername !== username">
+                  (read {{ message.dateRead | timeago }})
               </span>
-            <span
-              class="text-success"
-              *ngIf="message.dateRead && message.senderUsername !== username">
-                (read {{ message.dateRead | timeago }})
-            </span>
-          </small>
+            </small>
+          </div>
+          {{ message.content }}
         </div>
-        {{ message.content }}
+        <div *ngIf="messages.length > (indexOfelement + 1)" class="dropdown-divider"></div>
       </div>
-      <div *ngIf="messages.length > (indexOfelement + 1)" class="dropdown-divider"></div>
     </div>
   </div>
   <div class="card-footer">
