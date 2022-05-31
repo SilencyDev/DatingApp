@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { HttpTransportType, HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { BehaviorSubject, take } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Group } from '../_models/group';
@@ -18,9 +19,10 @@ export class MessageService {
   private messageThreadSource = new BehaviorSubject<Message[]>([]);
   messageThread$ = this.messageThreadSource.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private loading: NgxSpinnerService) { }
 
   CreateConnectionHub(user: User, otherUsername: string) {
+    this.loading.show();
     this.hubConnection = new HubConnectionBuilder()
       .withUrl(this.hubUrl + 'message?user=' + otherUsername, {
         accessTokenFactory: () => user.token
@@ -30,7 +32,8 @@ export class MessageService {
 
      this.hubConnection
       .start()
-      .catch(err => console.log(err));
+      .catch(err => console.log(err))
+      .finally(() => this.loading.hide());
 
       this.hubConnection.on("ReceiveMessageThread", messages => {
         this.messageThreadSource.next(messages);
@@ -59,8 +62,10 @@ export class MessageService {
   }
 
   DestroyHubConnection() {
-    if (this.hubConnection)
+    if (this.hubConnection) {
+      this.messageThreadSource.next([]);
       this.hubConnection.stop();
+    }
   }
 
   getMessages(pageNumber: number, pageSize: number, container: string) {
