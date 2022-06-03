@@ -1,20 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+namespace API.Entities;
 
-namespace API.Entities
+public class Connection
 {
-    public class Connection
-    {
-		public Connection() {}
-		public Connection(string connectionId, string username)
-		{
-			ConnectionId = connectionId;
-			Username = username;
-		}
+	public Connection() {}
+	public Connection(string connectionId, string username)
+	{
+		ConnectionId = connectionId;
+		Username = username;
+	}
 
-		public string ConnectionId { get; set; }
-		public string Username { get; set; }
-    }
+	public string ConnectionId { get; set; }
+	public string Username { get; set; }
 }

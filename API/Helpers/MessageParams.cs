@@ -1,13 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+namespace API.Helpers;
 
-namespace API.Helpers
+public class MessageParams : Pagination
 {
-    public class MessageParams : Pagination
-    {
-        public string Username { get; set; }
-		public string Container { get; set; } = "unread";
-    }
+    public string Username { get; set; }
+	public string Container { get; set; } = "unread";
 }
