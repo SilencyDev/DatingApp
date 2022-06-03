@@ -9,7 +9,7 @@
         (click)="setMainPhoto(photo)">Main</button>
       <button
         [disabled]="photo.isMain"
-        class="btn btn-sm btn-danger ml-2"
+        class="btn btn-sm btn-danger ms-1"
         (click)="deletePhoto(photo)"><i class="fa fa-trash"></i></button>
     </div>
   </div>
@@ -51,7 +51,7 @@
       <div>
           <div>
               Queue progress:
-              <div class="progress" style="">
+              <div class="progress">
                   <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': uploader.progress + '%' }"></div>
               </div>
           </div>

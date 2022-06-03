@@ -1,4 +1,4 @@
-<div class="form-group">
+<div class="mb-2">
   <input
       [class.is-invalid]='ngControl.invalid
         && ngControl.touched'
@@ -12,6 +12,8 @@
       class="invalid-feedback">{{ label | titlecase }} must be at least {{ ngControl.control.errors.minlength['requiredLength'] }} characters</div>
     <div *ngIf="ngControl.control.errors?.maxlength"
       class="invalid-feedback">{{ label | titlecase }} must be at most {{ ngControl.control.errors.maxlength['requiredLength'] }} characters</div>
+    <div *ngIf="ngControl.control.errors?.pattern"
+      class="invalid-feedback">{{ label | titlecase }} must have at least one uppercase character</div>
     <div *ngIf="ngControl.control.errors?.isMatching"
       class="invalid-feedback">Passwords must match</div>
 </div>

@@ -8,7 +8,7 @@
     [scrollTop]="scrollMe.scrollHeight">
       <div
         *ngFor="let message of (messageService.messageThread$ | async); let indexOfelement = index">
-        <span class="chat-img float-right">
+        <span class="chat-img float-end">
           <img
             class="img-circle rounded-circle"
             src="{{ message.senderPhotoUrl || './assets/user.png' }}"

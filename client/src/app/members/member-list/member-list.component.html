@@ -2,35 +2,31 @@
   <h2>Your matches - {{ pagination?.totalItems }} found</h2>
 </div>
 <div class="container mt-3">
-  <form #form="ngForm" class="form-inline mb-3" (ngSubmit)="loadMembers()" autocomplete="off">
-    <div class="form-group px-2">
+  <form #form="ngForm" class="d-flex mb-3 align-items-center" (ngSubmit)="loadMembers()" autocomplete="off">
       <label>Age range :</label>
-      <input
+        <input
         type="number"
         class="form-control mx-1"
         name="minAge"
-        style="max-width: 100px;"
+        style="max-width: 80px;"
         [(ngModel)]="memberService.userParams.minAge">
-      to
-      <input
-      type="number"
-      class="form-control mx-1"
-      name="maxAge"
-      style="max-width: 100px;"
-      [(ngModel)]="memberService.userParams.maxAge">
-    </div>
-    <div class="form-group px-2">
+      <label>to</label>
+        <input
+        type="number"
+        class="form-control mx-1"
+        name="maxAge"
+        style="max-width: 80px;"
+        [(ngModel)]="memberService.userParams.maxAge">
       <label>Show : </label>
-      <select name="gender" class="form-control mx-1" [(ngModel)]="memberService.userParams.gender">
-        <option style="color: black;" *ngFor="let gender of genderList" [value]="gender.value">
-           {{ gender.display }}
-        </option>
-      </select>
-    </div>
-    <button class="btn btn-sm btn-primary mx-1" type="submit">Apply filter</button>
-    <button class="btn btn-sm btn-secondary mx-1" type="submit" (click)="resetFilter()">Reset filter</button>
+        <select name="gender" class="form-control mx-1" [(ngModel)]="memberService.userParams.gender">
+          <option style="color: black;" *ngFor="let gender of genderList" [value]="gender.value">
+             {{ gender.display }}
+          </option>
+        </select>
+      <button class="btn btn-sm btn-primary mx-1" type="submit">Apply filter</button>
+      <button class="btn btn-sm btn-secondary mx-1" type="submit" (click)="resetFilter()">Reset filter</button>
     <div class="col">
-      <div class="btn-group float-right">
+      <div class="btn-group float-end">
         <button
         type="button"
         class="btn btn-sm btn-primary"
