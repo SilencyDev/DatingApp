@@ -1,1 +1,39 @@
-<p>photo-management works!</p>
+<div class="row">
+  <table class="table">
+    <thead>
+      <tr>
+        <th style="width: 30%;">Photo</th>
+        <th style="width: 30%;">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let photo of photoList">
+        <td> <img class="img-circle rounded-circle" src="{{ photo.url }}" alt=""></td>
+        <td>
+        <div class="btn-group">
+          <button class="btn btn-sm btn-success" (click)="validatePhoto(photo)">
+            <i class="fa fa-check"></i> Validate
+          </button>
+          <button class="btn btn-sm btn-danger" (click)="removePhoto(photo)">
+            <i class="fa fa-trash"></i> Remove
+          </button>
+        </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class="d-flex justify-content-center">
+  <pagination *ngIf="pagination && photoList.length"
+    [boundaryLinks]="true"
+    [totalItems]="pagination.totalItems"
+    [itemsPerPage]="pagination.itemsPerPage"
+    [(ngModel)]="pagination.currentPage"
+    (pageChanged)="onPageChange($event)"
+    [maxSize]="10"
+    previousText="&lsaquo;"
+    nextText="&rsaquo;"
+    firstText="&laquo;"
+    lastText="&raquo;">
+  </pagination>
+</div>

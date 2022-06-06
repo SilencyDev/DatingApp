@@ -13,7 +13,7 @@ import { MembersService } from 'src/app/_services/members.service';
   styleUrls: ['./member-list.component.scss']
 })
 export class MemberListComponent implements OnInit {
-  members: Member[];
+  members: Member[] = [];
   pagination: Pagination;
   genderList = [
     {value: 'male', display: 'males'},

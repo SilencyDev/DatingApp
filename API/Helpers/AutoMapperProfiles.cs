@@ -6,7 +6,7 @@ public class AutoMapperProfiles : Profile
 	        CreateMap<AppUser, MemberDTO>()
 			.ForMember(
 	            dest => dest.PhotoUrl,
-	            opt => opt.MapFrom(src => src.Photos.FirstOrDefault(photo => photo.IsMain).Url))
+	            opt => opt.MapFrom(src => src.Photos.FirstOrDefault(photo => photo.IsMain && photo.IsValidated).Url))
 	        .ForMember(dest => dest.Age,
 	            opt => opt.MapFrom(src => src.DateOfBirth.CalculateAge()));
 	        CreateMap<Photo, PhotoDTO>();
@@ -20,5 +20,6 @@ public class AutoMapperProfiles : Profile
 					dest => dest.SenderPhotoUrl,
 					opt => opt.MapFrom(src => src.Sender.Photos.FirstOrDefault(photo => photo.IsMain).Url));
 		CreateMap<DateTime, DateTime>().ConvertUsing(d => DateTime.SpecifyKind(d, DateTimeKind.Utc));
+		CreateMap<Photo, PhotoDTO>();
     }
 }

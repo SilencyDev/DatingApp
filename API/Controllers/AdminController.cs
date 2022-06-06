@@ -3,10 +3,12 @@ namespace API.Controllers;
 public class AdminController : BaseApiController
 {
     public readonly UserManager<AppUser> _userManager;
+	private readonly IUnitOfWork _unitOfWork;
 
-	public AdminController(UserManager<AppUser> userManager)
+	public AdminController(UserManager<AppUser> userManager, IUnitOfWork unitOfWork)
 	{
         _userManager = userManager;
+		_unitOfWork = unitOfWork;
 	}
 
 	[Authorize(Policy = "RequireAdminRole")]
@@ -43,8 +45,41 @@ public class AdminController : BaseApiController
 	
 	[Authorize(Policy = "ModeratePhotoRole")]
     [HttpGet("photos-to-moderate")]
-	public ActionResult GetPhotosForModeration() {
-		return Ok("Only Admins can see this");
+	public async Task<ActionResult<List<PhotoDTO>>> GetPhotosForModeration([FromQuery] UserParams userParams) {
+		var photoList = await _unitOfWork.PhotoRepository.getUnvalidatedPhoto(userParams);
+		Response.AddPaginationHeader(photoList.CurrentPage, photoList.PageSize, photoList.TotalCount, photoList.TotalPages);
+		return photoList;
+	}
+	
+	[Authorize(Policy = "ModeratePhotoRole")]
+    [HttpDelete("photos-to-moderate/delete/{id}")]
+	public async Task<ActionResult> DeletePhotoOnModeration(int id) {
+		var photo = await _unitOfWork.PhotoRepository.getPhoto(id);
+		if (photo == null)
+			return NotFound();
+		if (photo.IsValidated)
+			return BadRequest("You can't delete a validated photo");
+		_unitOfWork.PhotoRepository.DeletePhoto(photo);
+		
+		if (await _unitOfWork.Complete())
+			return Ok();
+		return BadRequest("Failed to delete photo on moderation");
+		
+	}
+	
+	[Authorize(Policy = "ModeratePhotoRole")]
+    [HttpPost("photos-to-moderate/accept/{id}")]
+	public async Task<ActionResult> AcceptPhotoOnModeration(int id) {
+		var photo = await _unitOfWork.PhotoRepository.getPhoto(id);
+		if (photo == null)
+			return NotFound();
+		if (photo.IsValidated)
+			return BadRequest("You can't validate a validated photo");
+		photo.IsValidated = true;
+		if (await _unitOfWork.Complete())
+			return Ok();
+		return BadRequest("Failed to Accept photo on moderation");
+		
 	}
 }
 

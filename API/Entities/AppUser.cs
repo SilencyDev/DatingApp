@@ -3,7 +3,6 @@ namespace API.Entities;
 public class AppUser : IdentityUser<int>
 {
     public string Pseudo { get; set; }
-    public byte[] PasswordSalt { get; set; }
     public string Gender { get; set; }
     public string Introduction { get; set; }
     public string LookingFor { get; set; }

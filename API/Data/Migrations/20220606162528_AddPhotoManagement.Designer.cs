@@ -3,6 +3,7 @@ using System;
 using API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220606162528_AddPhotoManagement")]
+    partial class AddPhotoManagement
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -116,6 +118,9 @@ namespace API.Data.Migrations
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("text");
+
+                    b.Property<byte[]>("PasswordSalt")
+                        .HasColumnType("bytea");
 
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("text");
@@ -249,14 +254,14 @@ namespace API.Data.Migrations
                     b.Property<bool>("IsMain")
                         .HasColumnType("boolean");
 
-                    b.Property<bool>("IsValidated")
-                        .HasColumnType("boolean");
-
                     b.Property<string>("PublicId")
                         .HasColumnType("text");
 
                     b.Property<string>("Url")
                         .HasColumnType("text");
+
+                    b.Property<bool>("isValidated")
+                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 

@@ -28,11 +28,10 @@ const routes: Routes = [
       { path: 'lists', component: ListsComponent },
       { path: 'messages', component: MessagesComponent },
       { path: 'admin', component: AdminPanelComponent, canActivate: [AdminGuard] },
+      { path: 'errors', component: TestErrorsComponent, canActivate: [AdminGuard] },
     ]
   },
   { path: 'not-found', component: NotFoundComponent },
-  { path: 'server-error', component: ServerErrorComponent },
-  { path: 'errors', component: TestErrorsComponent },
   { path: '**', component: NotFoundComponent, pathMatch: 'full'},
 ];
 
